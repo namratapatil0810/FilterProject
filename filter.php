@@ -10,7 +10,7 @@ $conn = mysqli_connect($servername, $username, $password, $dbname);
 if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
 }
-?>                                
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -30,12 +30,6 @@ if (!$conn) {
     <link rel="stylesheet" href="assets/css/plugins.min.css">
     <link rel="stylesheet" href="assets/css/style.light-blue-500.min.css">
     <link rel="stylesheet" href="assets/css/width-boxed.min.css" id="ms-boxed" disabled="">
-    <style>
-    .hidden {
-        visibility: hidden;
-    }
-}
-</style>
     <!--[if lt IE 9]>
         <script src="assets/js/html5shiv.min.js"></script>
         <script src="assets/js/respond.min.js"></script>
@@ -117,7 +111,7 @@ if (!$conn) {
                                 <h3 class="card-title">Filter List</h3>
                             </div>
                             <div class="card-block">
-                                <form class="form-horizontal" id="Filters" action="#data">
+                                <form class="form-horizontal" id="Filters" action="" method="POST">
                                     <h4 class="mb-1 no-mt">Year</h4>
                                     <fieldset>
                                         <div class="form-group no-mt">
@@ -152,10 +146,11 @@ if (!$conn) {
                                             </div>
                                         </div>
                                     </fieldset>
-                                    <button type="submit" class="btn btn-danger btn-block no-mb mt-1" id="apply">
-                                        <a href="#data"><i class="zmdi zmdi-refresh"></i>Apply Filters</a></button>
+                                    <input type="submit" class="btn btn-danger btn-block no-mb mt-1" name="submit" Value="submit">
                                     <button class="btn btn-danger btn-block no-mb mt-1" id="Reset">
-                                        <a href="#clear"><i class="zmdi zmdi-delete"></i> Clear Filters</a></button>
+                                        <a href="#clear">
+                                            <i class="zmdi zmdi-delete"></i> Clear Filters</a>
+                                    </button>
                                 </form>
                             </div>
                         </div>
@@ -164,159 +159,104 @@ if (!$conn) {
                         <div class="ms-paper-content">
                             <section class="ms-component-section">
                                 <h2 class="section-title" id="tables-responsive">Details of Students</h2>
-                                    <div class="bs-example">
-                                        <table class="table table-responsive">
-                                        <?php
-                                $query = "SELECT * FROM data";
-                                echo $query;
-                                ?>
-                                            <thead>
+                                <div class="bs-example">
+                                    <table class="table table-responsive">
+                                        <thead>
+                                            <?php
+                                            error_reporting(0);
+                                            if (isset($_POST['submit']))
+                                            {
+                                            $chkbox1 = $_POST['year'];
+                                            $chkbox2 = $_POST['stream'];
+                                            }
+                                            //checking values
+                                            if (isset($chkbox1)){
+                                                $Y= $chkbox1;   
+                                            }else{  
+                                                $Y= [];
+                                            }
+                                            if (isset($chkbox2)) {
+                                                $S = $chkbox2;
+                                            }else{  
+                                                $S= [];
+                                            }
+                                            //for multiple options of year
+                                            function multioptiony($x1,$x2)
+                                            {
+                                            return $x1 . "," . $x2;
+                                            }
+                                            $year = (array_reduce($Y,"multioptiony"));
+                                            $year= ltrim ($year,',');
+                                            //for multiple options of stream
+                                            function multioptions($y1,$y2)
+                                            {
+                                            return $y1 . ",'" . $y2."'";
+                                            }
+                                            $stream = (array_reduce($S,"multioptions"));
+                                            $stream= ltrim ($stream,',');
+                                            
+                                            if ($year != "" && $stream != "" ) {
+                                                //echo $year." and ".$stream;
+                                                $sql = "SELECT * FROM data WHERE Year IN($year) and Stream IN($stream)";
+                                            }
+                                            elseif ($year == "" && $stream !="") {
+                                                //echo $stream;
+                                                $sql = "SELECT * FROM data WHERE Stream IN($stream)";
+                                            }
+                                            elseif ($year != "" && $stream =="") {
+                                                //echo $year;
+                                                $sql = "SELECT * FROM data WHERE Year IN($year)";
+                                            }
+                                            else{
+                                                $sql = "SELECT * FROM data";
+                                            }
+                                            
+                                            //$sql = "SELECT * FROM data WHERE Year IN($year) or Stream IN($stream)";
+                                            echo'<br>';
+                                            echo $sql;
+                                            
+                                            $result = mysqli_query($conn, $sql) ; 
+                                            ?>
+                                                <tr>
+                                                    <th>Roll No.</th>
+                                                    <th>Name Of Student</th>
+                                                    <th>Email Id</th>
+                                                    <th>Contact</th>
+                                                    <th>Marks</th>
+                                                </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            $result = mysqli_query($conn, $sql) ;
+                                            If(mysqli_num_rows($result)>0)  
+                                            {
+                                                while($row=mysqli_fetch_array($result))
+                                                    {  
+                                            ?>
+                                                <tr>
+                                                    <td>
+                                                        <?php echo $row['Roll_No']; ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php echo $row['Name']; ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php echo $row['Email']; ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php echo $row['Contact']; ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php echo $row['Marks']; ?>
+                                                    </td>
+                                                </tr>
                                                 <?php
-                                                    $result = mysqli_query($conn, $query) ; 
-                                                ?>
-
-                                                    <tr>
-                                                        <th>Roll No.</th>
-                                                        <th>Name Of Student</th>
-                                                        <th>Email Id</th>
-                                                        <th>Contact</th>
-                                                        <th>Marks</th>
-                                                    </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php
-                                                    $res = mysqli_query($conn, $query) ;
-                                                    If(mysqli_num_rows($result)>0)  
-                                                    {
-                                                        while($row=mysqli_fetch_array($res))
-                                                            {  
-                                                    ?>
-                                                    <tr>
-                                                        <td>
-                                                            <?php echo $row['Roll_No']; ?>
-                                                        </td>
-                                                        <td>
-                                                            <?php echo $row['Name']; ?>
-                                                        </td>
-                                                        <td>
-                                                            <?php echo $row['Email']; ?>
-                                                        </td>
-                                                        <td>
-                                                            <?php echo $row['Contact']; ?>
-                                                        </td>
-                                                        <td>
-                                                            <?php echo $row['Marks']; ?>
-                                                        </td>
-                                                    </tr>
-                                                    <?php
-                                                            }
                                                     }
-                                                    ?>
-
-                                            </tbody>
-                        
-                                        </table>
-                                    </div>
-                            </section>
-                        </div>
-                        <div class="ms-paper-content">
-                            <section class="ms-component-section">
-                                <h2 class="section-title" id="tables-responsive">Details of Students</h2>
-                                    <div class="bs-example">
-                                        <table class="table table-responsive">
-                                        <?php
-                                //checking values
-                                if (isset($_GET['year'])) {
-                                    $Y= $_GET['year'];   
-                                }else{  
-                                    $Y= NULL;
-                                }
-                                if (isset($_GET['stream'])) {
-                                    $S = $_GET['stream'];
-                                }else{  
-                                    $S= NULL;
-                                }
-                                
-                                //for multiple options of year
-                                function multioptiony($x1,$x2)
-                                {
-                                return $x1 . "," . $x2;
-                                }
-                                $year = (array_reduce($Y,"multioptiony"));
-                                $year= ltrim ($year,',');
-                                //for multiple options of stream
-                                function multioptions($y1,$y2)
-                                {
-                                return $y1 . ",'" . $y2."'";
-                                }
-                                $stream = (array_reduce($S,"multioptions"));
-                                $stream= ltrim ($stream,',');
-                                
-                                if ($year != "" && $stream != "" ) {
-                                    //echo $year." and ".$stream;
-                                    $sql = "SELECT * FROM data WHERE Year IN($year) and Stream IN($stream)";
-                                }
-                                elseif ($year == "" && $stream !="") {
-                                    //echo $stream;
-                                    $sql = "SELECT * FROM data WHERE Stream IN($stream)";
-                                }
-                                elseif ($year != "" && $stream =="") {
-                                    //echo $year;
-                                    $sql = "SELECT * FROM data WHERE Year IN($year)";
-                                }
-                                
-                                
-                                //$sql = "SELECT * FROM data WHERE Year IN($year) or Stream IN($stream)";
-                                echo'<br>';
-                                echo $sql;
-                                ?>
-                                            <thead>
-                                                <?php
-                                                    $result = mysqli_query($conn, $sql) ; 
-                                                ?>
-
-                                                    <tr>
-                                                        <th>Roll No.</th>
-                                                        <th>Name Of Student</th>
-                                                        <th>Email Id</th>
-                                                        <th>Contact</th>
-                                                        <th>Marks</th>
-                                                    </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php
-                                                    $result = mysqli_query($conn, $sql) ;
-                                                    If(mysqli_num_rows($result)>0)  
-                                                    {
-                                                        while($row=mysqli_fetch_array($result))
-                                                            {  
-                                                    ?>
-                                                    <tr>
-                                                        <td>
-                                                            <?php echo $row['Roll_No']; ?>
-                                                        </td>
-                                                        <td>
-                                                            <?php echo $row['Name']; ?>
-                                                        </td>
-                                                        <td>
-                                                            <?php echo $row['Email']; ?>
-                                                        </td>
-                                                        <td>
-                                                            <?php echo $row['Contact']; ?>
-                                                        </td>
-                                                        <td>
-                                                            <?php echo $row['Marks']; ?>
-                                                        </td>
-                                                    </tr>
-                                                    <?php
-                                                            }
-                                                    }
-                                                    ?>
-
-                                            </tbody>
-                        
-                                        </table>
-                                    </div>
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </section>
                         </div>
                     </div>

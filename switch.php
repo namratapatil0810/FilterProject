@@ -14,12 +14,12 @@ if (!$conn) {
 if (isset($_GET['year'])) {
     $Y= $_GET['year'];   
 }else{  
-    $Y= NULL;
+    $Y= [];
 }
 if (isset($_GET['stream'])) {
     $S = $_GET['stream'];
 }else{  
-    $S= NULL;
+    $S= [];
 }
 
 //for multiple options of year

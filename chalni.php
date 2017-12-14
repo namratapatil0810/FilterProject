@@ -39,8 +39,11 @@
                     </div>
                 </div>
                 <br>
+                <div>
                 <button id="Reset">Clear Filters</button>
-                <button type="submit" id="Submit">Apply Filters</button>
+                </div>
+                <div>
+                <button type="submit" id="Submit">Apply Filters</button></div>
                 <br>
             </fieldset>
         </form>
