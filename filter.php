@@ -117,19 +117,19 @@ if (!$conn) {
                                         <div class="form-group no-mt">
                                             <div class="checkbox">
                                                 <label>
-                                                    <input type="checkbox" name="year[]" id="year" value=".2018"> 2018 </label>
+                                                    <input type="checkbox" name="year[]" id="year" value="2018"> 2018 </label>
                                             </div>
                                             <div class="checkbox">
                                                 <label>
-                                                    <input type="checkbox" name="year[]" id="year" value=".2017"> 2017 </label>
+                                                    <input type="checkbox" name="year[]" id="year" value="2017"> 2017 </label>
                                             </div>
                                             <div class="checkbox">
                                                 <label>
-                                                    <input type="checkbox" name="year[]" id="year" value=".2016"> 2016 </label>
+                                                    <input type="checkbox" name="year[]" id="year" value="2016"> 2016 </label>
                                             </div>
                                             <div class="checkbox">
                                                 <label>
-                                                    <input type="checkbox" name="year[]" id="year" value=".2015"> 2015 </label>
+                                                    <input type="checkbox" name="year[]" id="year" value="2015"> 2015 </label>
                                             </div>
                                         </div>
                                     </fieldset>
@@ -138,11 +138,11 @@ if (!$conn) {
                                         <div class="form-group no-mt">
                                             <div class="checkbox">
                                                 <label>
-                                                    <input type="checkbox" name="stream[]" id="stream" value=".B.Sc.IT"> B.Sc.IT </label>
+                                                    <input type="checkbox" name="stream[]" id="stream" value="B.Sc.IT"> B.Sc.IT </label>
                                             </div>
                                             <div class="checkbox">
                                                 <label>
-                                                    <input type="checkbox" name="stream[]" id="stream" value=".BMS"> BMS </label>
+                                                    <input type="checkbox" name="stream[]" id="stream" value="BMS"> BMS </label>
                                             </div>
                                         </div>
                                     </fieldset>
